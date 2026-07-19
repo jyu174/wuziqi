@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>五子棋 Gomoku</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>五子棋 <span class="en">Gomoku</span></h1>
+  <div id="user-info" class="hidden">
+    <span id="user-name"></span>
+    <button id="btn-logout" class="small">退出登录 Logout</button>
+  </div>
+</header>
+
+<main>
+  <!-- 登录 / 注册 -->
+  <section id="screen-login" class="screen">
+    <div class="card narrow">
+      <div class="tabs">
+        <button id="tab-login" class="tab active" type="button">登录 Login</button>
+        <button id="tab-register" class="tab" type="button">注册 Register</button>
+      </div>
+      <form id="form-login">
+        <input id="login-username" placeholder="用户名 Username" autocomplete="username" required>
+        <input id="login-password" type="password" placeholder="密码 Password" autocomplete="current-password" required>
+        <button type="submit" class="primary">登录 Login</button>
+      </form>
+      <form id="form-register" class="hidden">
+        <input id="reg-username" placeholder="用户名（2-20位字母/数字/汉字）" autocomplete="username" required>
+        <input id="reg-password" type="password" placeholder="密码（至少6位）" autocomplete="new-password" required>
+        <input id="reg-password2" type="password" placeholder="确认密码 Confirm password" autocomplete="new-password" required>
+        <button type="submit" class="primary">注册 Register</button>
+      </form>
+      <p id="auth-error" class="error"></p>
+    </div>
+  </section>
+
+  <!-- 模式选择 -->
+  <section id="screen-menu" class="screen hidden">
+    <div class="menu-cards">
+      <div class="card">
+        <h2>人机对战 <span class="en">vs AI</span></h2>
+        <div class="field">
+          <span class="label">难度</span>
+          <label><input type="radio" name="ai-level" value="easy"> 简单</label>
+          <label><input type="radio" name="ai-level" value="normal" checked> 普通</label>
+          <label><input type="radio" name="ai-level" value="hard"> 困难</label>
+        </div>
+        <div class="field">
+          <span class="label">执子</span>
+          <label><input type="radio" name="ai-color" value="black" checked> ⚫ 执黑先行</label>
+          <label><input type="radio" name="ai-color" value="white"> ⚪ 执白后行</label>
+        </div>
+        <button id="btn-start-ai" class="primary">开始对局 Start</button>
+      </div>
+      <div class="card">
+        <h2>联机对战 <span class="en">Online PvP</span></h2>
+        <p class="hint">进入大厅，向在线玩家发起挑战。<br>Enter the lobby and challenge an online player.</p>
+        <button id="btn-enter-lobby" class="primary">进入大厅 Lobby</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 大厅 -->
+  <section id="screen-lobby" class="screen hidden">
+    <div class="card wide">
+      <h2>游戏大厅 <span class="en">Lobby</span> <span id="conn-status" class="conn"></span></h2>
+      <ul id="lobby-users"></ul>
+      <p class="hint">点击「空闲」玩家发起挑战 · Click an idle player to challenge them</p>
+      <button id="btn-lobby-back">返回 Back</button>
+    </div>
+  </section>
+
+  <!-- 对局 -->
+  <section id="screen-game" class="screen hidden">
+    <div id="game-status"></div>
+    <div id="board-wrap">
+      <canvas id="board" width="600" height="600"></canvas>
+      <div id="banner" class="hidden"><span id="banner-text"></span></div>
+    </div>
+    <div id="game-buttons">
+      <button id="btn-undo">悔棋 Undo</button>
+      <button id="btn-newgame">再来一局 New Game</button>
+      <button id="btn-leave">离开 Leave</button>
+    </div>
+  </section>
+</main>
+
+<div id="modal" class="hidden">
+  <div class="card narrow">
+    <p id="modal-text"></p>
+    <div class="modal-buttons">
+      <button id="modal-ok" class="primary"></button>
+      <button id="modal-cancel"></button>
+    </div>
+  </div>
+</div>
+
+<script src="js/game.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/net.js"></script>
+</body>
+</html>

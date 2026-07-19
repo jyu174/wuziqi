@@ -1,0 +1,175 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  background: #f0e7d8;
+  color: #3a2f21;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.4rem;
+  background: #5a4632;
+  color: #f5eede;
+}
+
+header h1 { font-size: 1.35rem; letter-spacing: 0.15em; }
+.en { font-size: 0.75em; opacity: 0.75; font-weight: normal; letter-spacing: normal; }
+
+#user-info { display: flex; align-items: center; gap: 0.8rem; }
+#user-name { font-weight: bold; }
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  width: 100%;
+}
+
+.screen { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.hidden { display: none !important; }
+
+.card {
+  background: #fffdf7;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(60, 40, 10, 0.15);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 420px;
+}
+.card.narrow { max-width: 360px; }
+.card.wide { max-width: 520px; }
+.card h2 { margin-bottom: 1rem; font-size: 1.15rem; }
+
+.menu-cards {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+.menu-cards .card { max-width: 340px; }
+
+.tabs { display: flex; margin-bottom: 1.2rem; border-bottom: 2px solid #e3d9c6; }
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.6rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #8c7b62;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.tab.active { color: #3a2f21; font-weight: bold; border-bottom-color: #b8860b; }
+
+form { display: flex; flex-direction: column; gap: 0.8rem; }
+input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d5c9b2;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fff;
+}
+input:focus { outline: 2px solid #b8860b55; border-color: #b8860b; }
+
+button {
+  padding: 0.55rem 1.1rem;
+  border: 1px solid #c9bda5;
+  border-radius: 8px;
+  background: #f3ecdd;
+  color: #3a2f21;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+button:hover { filter: brightness(0.96); }
+button:disabled { opacity: 0.5; cursor: default; }
+button.primary {
+  background: #b8860b;
+  border-color: #a1750a;
+  color: #fff;
+  font-weight: bold;
+}
+button.small { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+
+.field { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+.field .label { font-weight: bold; min-width: 2.5em; }
+.field label { cursor: pointer; }
+
+.hint { color: #8c7b62; font-size: 0.88rem; margin-bottom: 1rem; line-height: 1.5; }
+.error { color: #b03030; min-height: 1.2em; margin-top: 0.8rem; font-size: 0.9rem; }
+.conn { font-size: 0.8rem; color: #8c7b62; margin-left: 0.5rem; }
+
+#lobby-users { list-style: none; margin-bottom: 1rem; min-height: 3rem; }
+#lobby-users li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #eee4d0;
+}
+#lobby-users li.me { color: #8c7b62; }
+#lobby-users .status-idle { color: #2e7d32; font-size: 0.85rem; }
+#lobby-users .status-playing { color: #b03030; font-size: 0.85rem; }
+#lobby-users li.challengeable { cursor: pointer; }
+#lobby-users li.challengeable:hover { background: #f7f0e0; }
+
+#game-status {
+  font-size: 1.05rem;
+  min-height: 1.6em;
+  text-align: center;
+  padding: 0.2rem 1rem;
+}
+
+#board-wrap { position: relative; width: min(92vmin, 600px); }
+#board {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 3px 14px rgba(60, 40, 10, 0.35);
+  touch-action: manipulation;
+}
+
+#banner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(50, 38, 20, 0.92);
+  color: #ffe9b0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 1rem 2.2rem;
+  border-radius: 12px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+#game-buttons { display: flex; gap: 0.8rem; }
+
+#modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+#modal-text { font-size: 1.05rem; margin-bottom: 1.2rem; line-height: 1.6; }
+.modal-buttons { display: flex; gap: 0.8rem; justify-content: flex-end; }
+
+@media (max-width: 520px) {
+  header h1 { font-size: 1.1rem; }
+  .menu-cards { flex-direction: column; align-items: center; }
+}

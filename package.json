@@ -1,0 +1,12 @@
+{
+  "name": "wuziqi",
+  "version": "1.0.0",
+  "description": "五子棋 (Gomoku) — HTML5/JS game with AI and online PvP",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
