@@ -38,7 +38,7 @@
     App.show('login');
   }
 
-  window.Auth = { token, loggedOut };
+  window.Auth = { token, loggedOut, api };
 
   window.addEventListener('DOMContentLoaded', () => {
     const tabLogin = App.$('tab-login'), tabRegister = App.$('tab-register');

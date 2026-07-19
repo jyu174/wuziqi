@@ -122,6 +122,19 @@ button.small { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
 #lobby-users li.challengeable { cursor: pointer; }
 #lobby-users li.challengeable:hover { background: #f7f0e0; }
 
+#lb-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+#lb-table th, #lb-table td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #eee4d0;
+  text-align: center;
+}
+#lb-table th:first-child, #lb-table td:first-child { text-align: left; }
+#lb-table th.sortable { cursor: pointer; color: #8c7b62; }
+#lb-table th.sortable:hover { background: #f7f0e0; }
+#lb-table th.sortable.active { color: #b8860b; font-weight: bold; }
+#lb-table th.sortable.active::after { content: ' ▼'; font-size: 0.8em; }
+#lb-table tr.me td { color: #b8860b; font-weight: bold; }
+
 #game-status {
   font-size: 1.05rem;
   min-height: 1.6em;

@@ -61,6 +61,11 @@
         <p class="hint">进入大厅，向在线玩家发起挑战。<br>Enter the lobby and challenge an online player.</p>
         <button id="btn-enter-lobby" class="primary">进入大厅 Lobby</button>
       </div>
+      <div class="card">
+        <h2>排行榜 <span class="en">Leaderboard</span></h2>
+        <p class="hint">查看所有玩家的胜负战绩。<br>View win/loss records for all players.</p>
+        <button id="btn-leaderboard" class="primary">查看排行 View</button>
+      </div>
     </div>
   </section>
 
@@ -71,6 +76,27 @@
       <ul id="lobby-users"></ul>
       <p class="hint">点击「空闲」玩家发起挑战 · Click an idle player to challenge them</p>
       <button id="btn-lobby-back">返回 Back</button>
+    </div>
+  </section>
+
+  <!-- 排行榜 -->
+  <section id="screen-leaderboard" class="screen hidden">
+    <div class="card wide">
+      <h2>排行榜 <span class="en">Leaderboard</span></h2>
+      <table id="lb-table">
+        <thead>
+          <tr>
+            <th>玩家 Player</th>
+            <th class="sortable" data-key="aiWins">AI胜 AI W</th>
+            <th class="sortable" data-key="aiLosses">AI负 AI L</th>
+            <th class="sortable" data-key="pvpWins">联机胜 PVP W</th>
+            <th class="sortable" data-key="pvpLosses">联机负 PVP L</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+      <p id="lb-error" class="error"></p>
+      <button id="btn-lb-back">返回 Back</button>
     </div>
   </section>
 
@@ -103,5 +129,6 @@
 <script src="js/ai.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/net.js"></script>
+<script src="js/leaderboard.js"></script>
 </body>
 </html>

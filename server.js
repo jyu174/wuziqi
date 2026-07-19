@@ -76,6 +76,25 @@ async function handleApi(req, res) {
       if (!username) return sendJson(res, 401, { error: '未登录' });
       return sendJson(res, 200, { username });
     }
+    if (req.method === 'GET' && url === '/api/leaderboard') {
+      return sendJson(res, 200, { users: auth.leaderboard() });
+    }
+    if (req.method === 'POST' && url === '/api/ai-result') {
+      const token = (req.headers.authorization || '').replace(/^Bearer /, '');
+      const username = auth.verify(token);
+      if (!username) return sendJson(res, 401, { error: '未登录' });
+      let body = {};
+      try {
+        body = JSON.parse((await readBody(req)) || '{}');
+      } catch (e) {
+        return sendJson(res, 400, { error: '无效的请求' });
+      }
+      if (body.result !== 'win' && body.result !== 'loss') {
+        return sendJson(res, 400, { error: '无效的请求' });
+      }
+      auth.recordStat(username, body.result === 'win' ? 'aiWins' : 'aiLosses');
+      return sendJson(res, 200, { ok: true });
+    }
     sendJson(res, 404, { error: 'not found' });
   } catch (e) {
     sendJson(res, 500, { error: '服务器错误' });
@@ -216,6 +235,11 @@ function startGamePair(game) {
   broadcastLobby();
 }
 
+function recordPvpResult(winnerName, loserName) {
+  auth.recordStat(winnerName, 'pvpWins');
+  auth.recordStat(loserName, 'pvpLosses');
+}
+
 function destroyGame(game) {
   for (const t of game.disconnectTimers.values()) clearTimeout(t);
   for (const name of [game.players[BLACK], game.players[WHITE]]) {
@@ -339,6 +363,7 @@ function handleMove(ws, msg) {
     game.over = true;
     game.winner = win ? color : null;
     game.winCells = win;
+    if (win) recordPvpResult(game.players[color], game.players[3 - color]);
   } else {
     game.turn = 3 - color;
   }
@@ -392,6 +417,8 @@ function handleLeave(ws) {
   const username = ws.username;
   const game = userGame.get(username);
   if (!game) return;
+  // Abandoning an unfinished game counts as a loss for the leaver.
+  if (!game.over) recordPvpResult(opponentOf(game, username), username);
   sendToUser(opponentOf(game, username), { type: 'opponentLeft' });
   destroyGame(game);
 }
@@ -411,6 +438,8 @@ function handleClose(ws) {
       sendToUser(opponentOf(game, username), { type: 'opponentDisconnected', grace: RECONNECT_GRACE / 1000 });
       const timer = setTimeout(() => {
         game.disconnectTimers.delete(username);
+        // Grace expired without reconnecting: forfeit.
+        if (!game.over) recordPvpResult(opponentOf(game, username), username);
         sendToUser(opponentOf(game, username), { type: 'opponentLeft' });
         destroyGame(game);
       }, RECONNECT_GRACE);

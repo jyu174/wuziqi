@@ -44,6 +44,7 @@ function register(username, password) {
     salt,
     hash: hashPassword(password, salt),
     createdAt: new Date().toISOString(),
+    stats: { aiWins: 0, aiLosses: 0, pvpWins: 0, pvpLosses: 0 },
   };
   saveUsers();
   return { ok: true };
@@ -77,4 +78,24 @@ function logout(token) {
   sessions.delete(token);
 }
 
-module.exports = { register, login, verify, logout };
+const STAT_FIELDS = ['aiWins', 'aiLosses', 'pvpWins', 'pvpLosses'];
+
+// Records created before stats existed default lazily to zeros.
+function ensureStats(u) {
+  if (!u.stats) u.stats = { aiWins: 0, aiLosses: 0, pvpWins: 0, pvpLosses: 0 };
+  return u.stats;
+}
+
+function recordStat(username, field) {
+  if (typeof username !== 'string' || !STAT_FIELDS.includes(field)) return;
+  const u = users[username.toLowerCase()];
+  if (!u) return;
+  ensureStats(u)[field]++;
+  saveUsers();
+}
+
+function leaderboard() {
+  return Object.values(users).map((u) => ({ name: u.name, ...ensureStats(u) }));
+}
+
+module.exports = { register, login, verify, logout, recordStat, leaderboard };

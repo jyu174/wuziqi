@@ -230,6 +230,7 @@ const Game = {
   winCells: null,
   thinking: false,
   opponent: null,   // username, online mode
+  statSent: false,  // AI mode: at most one recorded result per board
 
   colorName(c) { return c === BLACK ? '⚫ 黑方' : '⚪ 白方'; },
 
@@ -287,6 +288,7 @@ const Game = {
     this.over = false;
     this.winCells = null;
     this.thinking = false;
+    this.statSent = false;
     App.banner(null);
   },
 
@@ -300,6 +302,10 @@ const Game = {
       return;
     }
     const iWon = winnerColor === this.myColor;
+    if (this.mode === 'ai' && App.user && !this.statSent) {
+      this.statSent = true;
+      Auth.api('POST', '/api/ai-result', { result: iWon ? 'win' : 'loss' }, true).catch(() => {});
+    }
     const winnerName = this.mode === 'ai'
       ? (iWon ? '你' : '电脑')
       : (iWon ? '你' : this.opponent);
