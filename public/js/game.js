@@ -232,7 +232,7 @@ const Game = {
   opponent: null,   // username, online mode
   statSent: false,  // AI mode: at most one recorded result per board
 
-  colorName(c) { return c === BLACK ? '⚫ 黑方' : '⚪ 白方'; },
+  colorName(c) { return c === BLACK ? '⚫ 黑方 Black' : '⚪ 白方 White'; },
 
   render() {
     Renderer.draw(this.board, {
@@ -246,12 +246,12 @@ const Game = {
     if (this.over) return;
     let who;
     if (this.mode === 'ai') {
-      who = this.turn === this.myColor ? '你' : '电脑';
+      who = this.turn === this.myColor ? '你 You' : '电脑 AI';
       if (this.thinking) return App.setStatus('🤔 电脑思考中… AI thinking…');
     } else {
-      who = this.turn === this.myColor ? '你' : this.opponent;
+      who = this.turn === this.myColor ? '你 You' : this.opponent;
     }
-    App.setStatus(`${this.colorName(this.turn)} 回合 · ${who}`);
+    App.setStatus(`${this.colorName(this.turn)} 回合 Turn · ${who}`);
   },
 
   // ----- shared game flow -----
@@ -278,7 +278,7 @@ const Game = {
     App.$('btn-newgame').classList.add('hidden');
     App.show('game');
     this.render();
-    App.setStatus(`对手：${opponent} · 你执${this.myColor === BLACK ? '黑 ⚫（先行）' : '白 ⚪'}`);
+    App.setStatus(`对手 Opponent：${opponent} · 你执${this.myColor === BLACK ? '黑 ⚫（先行）You play Black (first)' : '白 ⚪ You play White'}`);
     setTimeout(() => this.updateStatus(), 1500);
   },
 
@@ -307,10 +307,10 @@ const Game = {
       Auth.api('POST', '/api/ai-result', { result: iWon ? 'win' : 'loss' }, true).catch(() => {});
     }
     const winnerName = this.mode === 'ai'
-      ? (iWon ? '你' : '电脑')
-      : (iWon ? '你' : this.opponent);
-    App.setStatus(`${this.colorName(winnerColor)}（${winnerName}）获胜！`);
-    App.banner(iWon ? '🎉 你赢了! You win!' : (this.mode === 'ai' ? '💻 电脑获胜 AI wins' : `${this.opponent} 获胜`));
+      ? (iWon ? '你 You' : '电脑 AI')
+      : (iWon ? '你 You' : this.opponent);
+    App.setStatus(`${this.colorName(winnerColor)}（${winnerName}）获胜！Wins!`);
+    App.banner(iWon ? '🎉 你赢了! You win!' : (this.mode === 'ai' ? '💻 电脑获胜 AI wins' : `${this.opponent} 获胜 wins`));
     if (this.mode === 'online') App.$('btn-newgame').classList.remove('hidden');
   },
 
@@ -387,7 +387,7 @@ const Game = {
   leave() {
     if (this.mode === 'online') {
       if (!this.over) {
-        App.modal('对局尚未结束，确定要离开吗？', '离开 Leave', '取消 Cancel', (ok) => {
+        App.modal('对局尚未结束，确定要离开吗？The game is not over — leave anyway?', '离开 Leave', '取消 Cancel', (ok) => {
           if (ok) Net.leaveGame();
         });
         return;

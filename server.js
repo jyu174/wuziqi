@@ -57,7 +57,7 @@ async function handleApi(req, res) {
       try {
         body = JSON.parse((await readBody(req)) || '{}');
       } catch (e) {
-        return sendJson(res, 400, { error: '无效的请求' });
+        return sendJson(res, 400, { error: '无效的请求 Invalid request' });
       }
       if (url === '/api/register') {
         const r = auth.register(body.username, body.password);
@@ -73,7 +73,7 @@ async function handleApi(req, res) {
     if (req.method === 'GET' && url === '/api/me') {
       const token = (req.headers.authorization || '').replace(/^Bearer /, '');
       const username = auth.verify(token);
-      if (!username) return sendJson(res, 401, { error: '未登录' });
+      if (!username) return sendJson(res, 401, { error: '未登录 Not logged in' });
       return sendJson(res, 200, { username });
     }
     if (req.method === 'GET' && url === '/api/leaderboard') {
@@ -82,22 +82,22 @@ async function handleApi(req, res) {
     if (req.method === 'POST' && url === '/api/ai-result') {
       const token = (req.headers.authorization || '').replace(/^Bearer /, '');
       const username = auth.verify(token);
-      if (!username) return sendJson(res, 401, { error: '未登录' });
+      if (!username) return sendJson(res, 401, { error: '未登录 Not logged in' });
       let body = {};
       try {
         body = JSON.parse((await readBody(req)) || '{}');
       } catch (e) {
-        return sendJson(res, 400, { error: '无效的请求' });
+        return sendJson(res, 400, { error: '无效的请求 Invalid request' });
       }
       if (body.result !== 'win' && body.result !== 'loss') {
-        return sendJson(res, 400, { error: '无效的请求' });
+        return sendJson(res, 400, { error: '无效的请求 Invalid request' });
       }
       auth.recordStat(username, body.result === 'win' ? 'aiWins' : 'aiLosses');
       return sendJson(res, 200, { ok: true });
     }
     sendJson(res, 404, { error: 'not found' });
   } catch (e) {
-    sendJson(res, 500, { error: '服务器错误' });
+    sendJson(res, 500, { error: '服务器错误 Server error' });
   }
 }
 
@@ -265,7 +265,7 @@ wss.on('connection', (ws) => {
     if (!msg || typeof msg.type !== 'string') return;
 
     if (msg.type === 'auth') return handleAuth(ws, msg);
-    if (!ws.username) return send(ws, { type: 'error', message: '请先登录' });
+    if (!ws.username) return send(ws, { type: 'error', message: '请先登录 Please log in first' });
 
     switch (msg.type) {
       case 'challenge': return handleChallenge(ws, msg);
@@ -282,7 +282,7 @@ wss.on('connection', (ws) => {
 
 function handleAuth(ws, msg) {
   const username = auth.verify(msg.token);
-  if (!username) return send(ws, { type: 'authFail', message: '登录已过期，请重新登录' });
+  if (!username) return send(ws, { type: 'authFail', message: '登录已过期，请重新登录 Session expired — please log in again' });
 
   const old = sockets.get(username);
   if (old && old !== ws) {
@@ -312,10 +312,10 @@ function handleChallenge(ws, msg) {
   const from = ws.username;
   const to = msg.to;
   if (typeof to !== 'string' || to === from) return;
-  if (userGame.has(from)) return send(ws, { type: 'error', message: '你已在对局中' });
-  if (!sockets.has(to)) return send(ws, { type: 'error', message: '对方已离线' });
-  if (userGame.has(to)) return send(ws, { type: 'error', message: '对方正在对局中' });
-  if (challenges.has(from)) return send(ws, { type: 'error', message: '你已有一个等待回应的挑战' });
+  if (userGame.has(from)) return send(ws, { type: 'error', message: '你已在对局中 You are already in a game' });
+  if (!sockets.has(to)) return send(ws, { type: 'error', message: '对方已离线 That player is offline' });
+  if (userGame.has(to)) return send(ws, { type: 'error', message: '对方正在对局中 That player is in a game' });
+  if (challenges.has(from)) return send(ws, { type: 'error', message: '你已有一个等待回应的挑战 You already have a pending challenge' });
 
   const timer = setTimeout(() => {
     challenges.delete(from);
@@ -350,7 +350,7 @@ function handleMove(ws, msg) {
   const game = userGame.get(username);
   if (!game || game.over) return;
   const color = colorOf(game, username);
-  if (game.turn !== color) return send(ws, { type: 'error', message: '还没轮到你' });
+  if (game.turn !== color) return send(ws, { type: 'error', message: '还没轮到你 Not your turn' });
   const x = msg.x, y = msg.y;
   if (!Number.isInteger(x) || !Number.isInteger(y) || x < 0 || x >= SIZE || y < 0 || y >= SIZE) return;
   if (game.cells[y * SIZE + x] !== EMPTY) return;

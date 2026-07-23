@@ -61,7 +61,7 @@
         username: App.$('login-username').value.trim(),
         password: App.$('login-password').value,
       });
-      if (!ok) return setError(data.error || '登录失败');
+      if (!ok) return setError(data.error || '登录失败 Login failed');
       localStorage.setItem(TOKEN_KEY, data.token);
       loggedIn(data.username);
     });
@@ -72,15 +72,15 @@
       const username = App.$('reg-username').value.trim();
       const password = App.$('reg-password').value;
       if (password !== App.$('reg-password2').value) {
-        return setError('两次输入的密码不一致');
+        return setError('两次输入的密码不一致 Passwords do not match');
       }
       const { ok, data } = await api('POST', '/api/register', { username, password });
-      if (!ok) return setError(data.error || '注册失败');
+      if (!ok) return setError(data.error || '注册失败 Registration failed');
       // Auto-login after registration.
       const login = await api('POST', '/api/login', { username, password });
       if (!login.ok) {
         switchTab(false);
-        return setError('注册成功，请登录');
+        return setError('注册成功，请登录 Registered — please log in');
       }
       localStorage.setItem(TOKEN_KEY, login.data.token);
       loggedIn(login.data.username);

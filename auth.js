@@ -29,14 +29,14 @@ function hashPassword(password, salt) {
 
 function register(username, password) {
   if (typeof username !== 'string' || !/^[A-Za-z0-9_一-龥]{2,20}$/.test(username)) {
-    return { error: '用户名需为2-20位字母、数字、下划线或汉字' };
+    return { error: '用户名需为2-20位字母、数字、下划线或汉字 Username must be 2-20 letters, digits, underscores or Chinese characters' };
   }
   if (typeof password !== 'string' || password.length < 6) {
-    return { error: '密码至少需要6位' };
+    return { error: '密码至少需要6位 Password must be at least 6 characters' };
   }
   const key = username.toLowerCase();
   if (users[key]) {
-    return { error: '该用户名已被注册' };
+    return { error: '该用户名已被注册 Username already taken' };
   }
   const salt = crypto.randomBytes(16).toString('hex');
   users[key] = {
@@ -51,7 +51,7 @@ function register(username, password) {
 }
 
 function login(username, password) {
-  const bad = { error: '用户名或密码错误' };
+  const bad = { error: '用户名或密码错误 Incorrect username or password' };
   if (typeof username !== 'string' || typeof password !== 'string') return bad;
   const u = users[username.toLowerCase()];
   if (!u) return bad;

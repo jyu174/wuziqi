@@ -38,7 +38,7 @@ const Net = (() => {
       if (!active) return;
       if (reconnectAttempts >= 5) {
         connStatus('连接失败 disconnected');
-        App.modal('与服务器的连接已断开。', '返回菜单 Menu', null, () => {
+        App.modal('与服务器的连接已断开。Connection to the server was lost.', '返回菜单 Menu', null, () => {
           active = false;
           App.show('menu');
         });
@@ -75,7 +75,7 @@ const Net = (() => {
     for (const u of users) {
       const li = document.createElement('li');
       const name = document.createElement('span');
-      name.textContent = u.name === App.user ? `${u.name}（我）` : u.name;
+      name.textContent = u.name === App.user ? `${u.name}（我 me）` : u.name;
       const status = document.createElement('span');
       const playing = u.status === 'playing';
       status.textContent = playing ? '对局中 playing' : '空闲 idle';
@@ -86,9 +86,9 @@ const Net = (() => {
         li.className = 'me';
       } else if (!playing) {
         li.className = 'challengeable';
-        li.title = '点击发起挑战';
+        li.title = '点击发起挑战 Click to challenge';
         li.addEventListener('click', () => {
-          App.modal(`向 ${u.name} 发起挑战？`, '挑战 Challenge', '取消 Cancel', (ok) => {
+          App.modal(`向 ${u.name} 发起挑战？Challenge ${u.name}?`, '挑战 Challenge', '取消 Cancel', (ok) => {
             if (ok) send({ type: 'challenge', to: u.name });
           });
         });
@@ -143,29 +143,29 @@ const Net = (() => {
         break;
       case 'authFail':
         disconnect();
-        App.modal('登录已过期，请重新登录。', '好 OK', null, () => Auth.loggedOut());
+        App.modal('登录已过期，请重新登录。Session expired — please log in again.', '好 OK', null, () => Auth.loggedOut());
         break;
       case 'kicked':
         disconnect();
-        App.modal('该账号已在其他窗口登录，本窗口已下线。', '好 OK', null, () => App.show('menu'));
+        App.modal('该账号已在其他窗口登录，本窗口已下线。This account logged in from another window; this window is now offline.', '好 OK', null, () => App.show('menu'));
         break;
       case 'lobby':
         renderLobby(msg.users);
         break;
 
       case 'challengeSent':
-        connStatus(`已向 ${msg.to} 发起挑战，等待回应…`);
+        connStatus(`已向 ${msg.to} 发起挑战，等待回应… Challenge sent to ${msg.to}, waiting…`);
         break;
       case 'challengeIncoming':
-        App.modal(`${msg.from} 向你发起挑战！接受吗？`, '接受 Accept', '拒绝 Decline', (ok) => {
+        App.modal(`${msg.from} 向你发起挑战！接受吗？${msg.from} challenges you! Accept?`, '接受 Accept', '拒绝 Decline', (ok) => {
           send({ type: 'challengeAnswer', from: msg.from, accept: !!ok });
         });
         break;
       case 'challengeResult':
         if (!msg.accept) {
           connStatus('');
-          const why = msg.reason === 'timeout' ? '（超时未回应）' : '';
-          App.modal(`${msg.to} 拒绝了你的挑战${why}。`, '好 OK', null, null);
+          const why = msg.reason === 'timeout' ? '（超时未回应 no response）' : '';
+          App.modal(`${msg.to} 拒绝了你的挑战${why}。${msg.to} declined your challenge.`, '好 OK', null, null);
         }
         break;
       case 'challengeCancelled':
@@ -186,23 +186,23 @@ const Net = (() => {
         break;
 
       case 'rematchOffer':
-        App.modal(`${msg.from} 想再来一局，接受吗？`, '接受 Accept', '拒绝 Decline', (ok) => {
+        App.modal(`${msg.from} 想再来一局，接受吗？${msg.from} wants a rematch — accept?`, '接受 Accept', '拒绝 Decline', (ok) => {
           send({ type: 'restartAnswer', accept: !!ok });
         });
         break;
       case 'rematchResult':
-        if (!msg.accept) App.setStatus('对方拒绝了再来一局。');
+        if (!msg.accept) App.setStatus('对方拒绝了再来一局。Opponent declined the rematch.');
         break;
 
       case 'opponentDisconnected':
-        App.setStatus(`⚠️ 对手掉线，等待重连（${msg.grace}秒）…`);
+        App.setStatus(`⚠️ 对手掉线，等待重连（${msg.grace}秒）… Opponent disconnected, waiting ${msg.grace}s…`);
         break;
       case 'opponentReconnected':
         Game.updateStatus();
         break;
       case 'opponentLeft':
         App.closeModal(undefined);
-        App.modal('对手已离开对局。', '返回大厅 Lobby', null, () => App.show('lobby'));
+        App.modal('对手已离开对局。Your opponent left the game.', '返回大厅 Lobby', null, () => App.show('lobby'));
         break;
 
       case 'error':
@@ -232,7 +232,7 @@ const Net = (() => {
     sendMove(x, y) { send({ type: 'move', x, y }); },
     offerRematch() {
       send({ type: 'restart' });
-      App.setStatus('已发送再来一局请求，等待对方回应…');
+      App.setStatus('已发送再来一局请求，等待对方回应… Rematch request sent, waiting…');
     },
     leaveGame() {
       send({ type: 'leaveGame' });

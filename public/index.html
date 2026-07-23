@@ -29,8 +29,8 @@
         <button type="submit" class="primary">登录 Login</button>
       </form>
       <form id="form-register" class="hidden">
-        <input id="reg-username" placeholder="用户名（2-20位字母/数字/汉字）" autocomplete="username" required>
-        <input id="reg-password" type="password" placeholder="密码（至少6位）" autocomplete="new-password" required>
+        <input id="reg-username" placeholder="用户名 Username（2-20位字母/数字/汉字）" autocomplete="username" required>
+        <input id="reg-password" type="password" placeholder="密码 Password（至少6位 min 6 chars）" autocomplete="new-password" required>
         <input id="reg-password2" type="password" placeholder="确认密码 Confirm password" autocomplete="new-password" required>
         <button type="submit" class="primary">注册 Register</button>
       </form>
@@ -44,15 +44,15 @@
       <div class="card">
         <h2>人机对战 <span class="en">vs AI</span></h2>
         <div class="field">
-          <span class="label">难度</span>
-          <label><input type="radio" name="ai-level" value="easy"> 简单</label>
-          <label><input type="radio" name="ai-level" value="normal" checked> 普通</label>
-          <label><input type="radio" name="ai-level" value="hard"> 困难</label>
+          <span class="label">难度 Difficulty</span>
+          <label><input type="radio" name="ai-level" value="easy"> 简单 Easy</label>
+          <label><input type="radio" name="ai-level" value="normal" checked> 普通 Normal</label>
+          <label><input type="radio" name="ai-level" value="hard"> 困难 Hard</label>
         </div>
         <div class="field">
-          <span class="label">执子</span>
-          <label><input type="radio" name="ai-color" value="black" checked> ⚫ 执黑先行</label>
-          <label><input type="radio" name="ai-color" value="white"> ⚪ 执白后行</label>
+          <span class="label">执子 Color</span>
+          <label><input type="radio" name="ai-color" value="black" checked> ⚫ 执黑先行 Black (first)</label>
+          <label><input type="radio" name="ai-color" value="white"> ⚪ 执白后行 White (second)</label>
         </div>
         <button id="btn-start-ai" class="primary">开始对局 Start</button>
       </div>
